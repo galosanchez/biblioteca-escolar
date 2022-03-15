@@ -1,0 +1,243 @@
+package com.galosanchez.view;
+
+import com.galosanchez.controller.UserController;
+import com.galosanchez.domain.Student;
+import com.galosanchez.domain.User;
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+
+/**
+ * Esta clase crea el panel de Administración de Usuarios
+ * @author Galo Sánchez
+ */
+public class JPanelUsers extends javax.swing.JPanel implements MouseListener {
+
+    private final JFrame jFrameParent;
+    private JTable jTable;
+    private TablaModelo modelo;//modelo definido en la clase ModeloTabla
+    private final String titulos[] = {"","User", "Name", "Correo electrónico", "Creación"};
+
+    public JPanelUsers(JFrame jFrameParent) {
+        this.jFrameParent = jFrameParent;
+        initComponents();
+        newTable();
+    }
+
+    private void newTable() {
+        jTable = new JTable();
+        jTable.setBackground(Color.white);
+
+        jTable.setBorder(null);
+        jTable.addMouseListener(this);
+        jTable.setOpaque(false);
+        jScrollPane1.getViewport().setBackground(new java.awt.Color(245, 245, 245));
+
+        jScrollPane1.setViewportView(jTable);
+
+        Object[][] data = obtenerMatrizDatos(titulos.length, consultarListaUsuarios());
+        construirTabla(titulos, data);
+    }
+
+    private void construirTabla(String[] titulos, Object[][] data) {
+        modelo = new TablaModelo(data, titulos);
+        //se asigna el modelo a la tabla
+        jTable.setModel(modelo);
+
+        //se asigna el tipo de dato que tendrán las celdas de cada columna definida respectivamente para validar su personalización
+        jTable.getColumnModel().getColumn(0).setCellRenderer(new TableGestionCeldas("texto"));
+        jTable.getColumnModel().getColumn(1).setCellRenderer(new TableGestionCeldas("texto"));
+        jTable.getColumnModel().getColumn(2).setCellRenderer(new TableGestionCeldas("texto"));
+        jTable.getColumnModel().getColumn(3).setCellRenderer(new TableGestionCeldas("texto"));
+        jTable.getColumnModel().getColumn(4).setCellRenderer(new TableGestionCeldas("texto"));
+
+        jTable.getTableHeader().setReorderingAllowed(false);
+        jTable.setRowHeight(30);//tamaño de las celdas
+        jTable.setGridColor(new java.awt.Color(158, 158, 158));
+        jTable.setShowVerticalLines(false);
+
+        //Se define el tamaño de largo para cada columna y su contenido
+        jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+        jTable.getColumnModel().getColumn(1).setPreferredWidth(210);
+        jTable.getColumnModel().getColumn(2).setPreferredWidth(210);
+        jTable.getColumnModel().getColumn(3).setPreferredWidth(239);
+        jTable.getColumnModel().getColumn(4).setPreferredWidth(210);
+
+        //personaliza el encabezado
+        JTableHeader jtableHeader = jTable.getTableHeader();
+        jtableHeader.setDefaultRenderer(new TableGestionEncabezado());
+        jTable.setTableHeader(jtableHeader);
+
+        //se asigna la tabla al scrollPane
+        jScrollPane1.setViewportView(jTable);
+
+    }
+
+    /**
+     * se crea la matriz donde las filas son dinamicas pues corresponde
+     * a todos los usuarios, mientras que las columnas son estaticas
+     * correspondiendo a las columnas definidas por defecto
+     * @param sizeTitles
+     * @param listaPersonas
+     * @return 
+     */
+    private Object[][] obtenerMatrizDatos(int sizeTitles, ArrayList<User> listaPersonas) {
+        String informacion[][] = new String[listaPersonas.size()][sizeTitles];
+
+        for (int x = 0; x < informacion.length; x++) {
+
+            informacion[x][0] = "";
+            informacion[x][1] = listaPersonas.get(x).getUser()+ "";
+            informacion[x][2] = listaPersonas.get(x).getName()+ "";
+            informacion[x][3] = listaPersonas.get(x).getEmail()+ "";
+            informacion[x][4] = listaPersonas.get(x).getCreatedAt()+ "";
+        }
+
+        return informacion;
+    }
+
+    private ArrayList<User> consultarListaUsuarios() {
+        try {
+            return UserController.listAllUsers();
+        } catch (Exception e) {
+            if (e.getLocalizedMessage().equals("3011")) {
+                openDialogAlert("danger", "No se puede establecer conexión con el", "servidor");
+            } else {
+                openDialogAlert("danger", "Error al momento de consultar al servidor", "");
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private void openDialogAlert(String tipo, String message1, String message2) {
+        DialogAlert dialogAlert = new DialogAlert(jFrameParent, true, tipo, message1, message2);
+        dialogAlert.setVisible(true);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanelFocus = new javax.swing.JPanel();
+        jPanelHorizontal = new javax.swing.JPanel();
+        jLabelGenelar = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+
+        setBackground(new java.awt.Color(245, 245, 245));
+        setMinimumSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(919, 586));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(245, 245, 245));
+        jPanel1.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel1.setPreferredSize(new java.awt.Dimension(874, 568));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Hind Siliguri Medium", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(33, 33, 33));
+        jLabel1.setText("Control de usuarios");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 24));
+
+        jPanelFocus.setBackground(new java.awt.Color(123, 31, 162));
+
+        javax.swing.GroupLayout jPanelFocusLayout = new javax.swing.GroupLayout(jPanelFocus);
+        jPanelFocus.setLayout(jPanelFocusLayout);
+        jPanelFocusLayout.setHorizontalGroup(
+            jPanelFocusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 55, Short.MAX_VALUE)
+        );
+        jPanelFocusLayout.setVerticalGroup(
+            jPanelFocusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 3, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanelFocus, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 61, 55, 3));
+
+        jPanelHorizontal.setBackground(new java.awt.Color(158, 158, 158));
+
+        javax.swing.GroupLayout jPanelHorizontalLayout = new javax.swing.GroupLayout(jPanelHorizontal);
+        jPanelHorizontal.setLayout(jPanelHorizontalLayout);
+        jPanelHorizontalLayout.setHorizontalGroup(
+            jPanelHorizontalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 879, Short.MAX_VALUE)
+        );
+        jPanelHorizontalLayout.setVerticalGroup(
+            jPanelHorizontalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanelHorizontal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 63, 879, 1));
+
+        jLabelGenelar.setFont(new java.awt.Font("Hind Siliguri SemiBold", 0, 16)); // NOI18N
+        jLabelGenelar.setForeground(new java.awt.Color(123, 31, 162));
+        jLabelGenelar.setText("Todos");
+        jLabelGenelar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel1.add(jLabelGenelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 35, 55, 25));
+
+        jScrollPane1.setBackground(new java.awt.Color(245, 245, 245));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(245, 245, 245), 0));
+        jScrollPane1.setForeground(new java.awt.Color(51, 51, 51));
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 84, 879, 485));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 16, 879, 570));
+    }// </editor-fold>//GEN-END:initComponents
+
+    
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelGenelar;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelFocus;
+    private javax.swing.JPanel jPanelHorizontal;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        //capturo fila o columna dependiendo de mi necesidad
+        int fila = jTable.rowAtPoint(e.getPoint());
+        int columna = jTable.columnAtPoint(e.getPoint());
+        
+        if (columna==5) {
+            Student student = new Student();
+            student.setCedula(jTable.getValueAt(fila, 0).toString());
+            student.setName(jTable.getValueAt(fila, 1).toString());
+            student.setLastName(jTable.getValueAt(fila, 2).toString());
+            student.setPhone(jTable.getValueAt(fila, 3).toString());
+            student.setEmail(jTable.getValueAt(fila, 4).toString());
+            DialogEditStudent jdialog = new DialogEditStudent(jFrameParent, true, student);
+            jdialog.setVisible(true);
+        }
+        
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+}
